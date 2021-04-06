@@ -4,6 +4,7 @@ double temp;
 int motorPin = A1;
 int speed = 200;
 int stop = 0;
+int threshold = 16;
 
 void setup() {
   //default
@@ -21,7 +22,7 @@ void loop() {
 	temp = temp - 0.5;
 	temp = temp * 100;
 	//--------------------------------------------
-	if (temp > 21) {
+	if (temp > threshold) {
 		runMotor();
 	}
 	else {
