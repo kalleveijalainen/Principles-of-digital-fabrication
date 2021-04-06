@@ -1,43 +1,41 @@
-int sensePin = A0;
+#include <dht.h>
+#define dht_apin A0
+
+dht DHT;
+
 int sensorInput;
-double temp; 
-int motorPin = A1;
-int speed = 200;
-int stop = 0;
-int threshold = 16;
+float temp; 
+int motorPin = 3;
+const int threshold = 21;
 
 void setup() {
-  //default
-  Serial.begin(9600);
+	Serial.begin(9600);//default
+	delay(500);//Delay to let system boot
+	Serial.println("DHT11 Humidity & temperature Sensor\n\n");
+	delay(1000);//Wait before accessing Sensor
  }
 
 void loop() {
-// Measure temp and control motor in 1s cycles
-//--------------------------------------------
-// credit to @Chris
-// https://bc-robotics.com/tutorials/using-a-tmp36-temperature-sensor-with-arduino/
-	sensorInput = analogRead(sensePin);
-	temp = (double)sensorInput / 1024;
-	temp = temp * 5;
-	temp = temp - 0.5;
-	temp = temp * 100;
-	//--------------------------------------------
-	if (temp > threshold) {
-		runMotor();
-	}
-	else {
-		stopMotor();
-	}
-	//Prevent constant measuring
-    delay(1000);
-}
+  	// Measure and run motor if it is too hot!
+    DHT.read11(dht_apin);
 
-void runMotor() {
-	//Spin rotor
-	analogWrite(motorPin, speed);
-}
+    temp = DHT.temperature;
 
-void stopMotor() {
-	//Slow down rotor / keep it stopped
-	analogWrite(motorPin, stop);
+    Serial.print(temp);
+    Serial.print("\n");
+
+    if (temp >= threshold) {
+		analogWrite(motorPin, 255);
+		Serial.print("rotate");
+		Serial.print("\n");
+    }
+	
+    else {
+		analogWrite(motorPin, 0);
+		Serial.print("stop");
+		Serial.print("\n");
+    }
+	
+    //Prevent constant measuring
+    delay(3000);
 }
