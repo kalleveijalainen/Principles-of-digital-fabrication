@@ -1,3 +1,7 @@
+//Credit to Ivan @Brainy-Bits for the DHT11-sensor related code.
+//Sensor tutorial and DHT_library.zip available here:
+//https://www.brainy-bits.com/post/how-to-use-the-dht11-temperature-and-humidity-sensor-with-an-arduino
+
 #include <dht.h>
 #define dht_apin A0
 
